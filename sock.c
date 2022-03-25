@@ -52,7 +52,7 @@ ssize_t sock_write (int sock_fd, void *buffer, size_t len)
     return tot_written;
 }
 
-int sock_create_bind (char *port)
+int sock_create_bind (char* ip_addr,char *port)
 {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
@@ -63,7 +63,7 @@ int sock_create_bind (char *port)
     hints.ai_family = AF_UNSPEC;
     hints.ai_flags = AI_PASSIVE;
 
-    ret = getaddrinfo(NULL, port, &hints, &result);
+    ret = getaddrinfo(ip_addr, port, &hints, &result);
     check(ret==0, "getaddrinfo error.");
 
     for (rp = result; rp != NULL; rp = rp->ai_next) {
@@ -97,7 +97,7 @@ int sock_create_bind (char *port)
     return -1;
 }
 
-int sock_create_connect (char *server_name, char *port)
+int sock_create_connect (char *ip_addr, char *port)
 {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
@@ -107,7 +107,7 @@ int sock_create_connect (char *server_name, char *port)
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_family = AF_UNSPEC;
 
-    ret = getaddrinfo(server_name, port, &hints, &result);
+    ret = getaddrinfo(ip_addr, port, &hints, &result);
     check(ret==0, "[ERROR] %s", gai_strerror(ret));
 
     for (rp = result; rp != NULL; rp = rp->ai_next) {
@@ -148,7 +148,6 @@ int sock_set_qp_info(int sock_fd, struct QPInfo *qp_info)
 
     tmp_qp_info.lid       = htons(qp_info->lid);
     tmp_qp_info.qp_num    = htonl(qp_info->qp_num);
-    tmp_qp_info.rank      = htonl(qp_info->rank);
 
     n = sock_write(sock_fd, (char *)&tmp_qp_info, sizeof(struct QPInfo));
     check(n==sizeof(struct QPInfo), "write qp_info to socket.");
@@ -169,8 +168,7 @@ int sock_get_qp_info(int sock_fd, struct QPInfo *qp_info)
 
     qp_info->lid       = ntohs(tmp_qp_info.lid);
     qp_info->qp_num    = ntohl(tmp_qp_info.qp_num);
-    qp_info->rank      = ntohl(tmp_qp_info.rank);
-    
+
     return 0;
 
  error:

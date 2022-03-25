@@ -41,7 +41,7 @@ int modify_qp_to_rts (struct ibv_qp *qp, uint32_t target_qp_num, uint16_t target
 	    .ah_attr.src_path_bits = 0,
 	    .ah_attr.port_num      = IB_PORT,
 	};
-
+	log_info("dest_qp_num:%u dlid:%u\n",target_qp_num,target_lid);
 	ret = ibv_modify_qp(qp, &qp_attr,
 			    IBV_QP_STATE | IBV_QP_AV |
 			    IBV_QP_PATH_MTU | IBV_QP_DEST_QPN |

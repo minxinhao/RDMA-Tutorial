@@ -10,7 +10,7 @@ PROG=rdma-tutorial
 
 all: $(PROG)
 
-debug: CFLAGS=-Wall -Werror -g -DDEBUG
+debug: CFLAGS=m -g -DDEBUG
 debug: $(PROG)
 
 .c.o:
@@ -18,6 +18,7 @@ debug: $(PROG)
 
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $(OBJS) $(LDFLAGS) $(LIBS)
+	$(RM) *.o
 
 clean:
 	$(RM) *.o *~ $(PROG)

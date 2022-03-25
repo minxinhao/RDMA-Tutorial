@@ -29,7 +29,6 @@ static inline uint64_t ntohll (uint64_t x) {return x; }
 struct QPInfo {
     uint16_t lid;
     uint32_t qp_num;
-    uint32_t rank;
 }__attribute__ ((packed));
 
 enum MsgType {
